@@ -53,7 +53,7 @@ on:
 
 jobs:
   plan_and_apply:
-    uses: VirtuallyBoring/alz-mgmt-templates/.github/workflows/cd-template.yaml@d5f5ae4b55ddd1d9740723a97676e069e2206290
+    uses: VirtuallyBoring/alz-mgmt-templates/.github/workflows/cd-template.yaml@main
     name: 'CD'
     permissions:
       id-token: write
