@@ -215,7 +215,75 @@ management_group_settings = {
   # role_assignment_name_use_random_uuid = false  # Uncomment this for backwards compatibility with previous naming convention
 }
 
-connectivity_type = "none"
+connectivity_type = "hub_and_spoke_vnet"
+
+hub_and_spoke_networks_settings = {
+  enabled_resources = {
+    ddos_protection_plan = false
+  }
+}
+
+hub_virtual_networks = {
+  hub_primary = {
+    location = "$${starter_location_01}"
+
+    enabled_resources = {
+      firewall                              = false
+      firewall_policy                       = false
+      bastion                               = false
+      virtual_network_gateway_express_route = false
+      virtual_network_gateway_vpn           = true
+      private_dns_zones                     = false
+      private_dns_resolver                  = false
+    }
+
+    hub_virtual_network = {
+      name                 = "vnet-hub-$${starter_location_01_short}"
+      address_space        = ["<CENTRALUS_HUB_CIDR>"]
+      mesh_peering_enabled = true
+    }
+
+    virtual_network_gateways = {
+      subnet_address_prefix = "<CENTRALUS_GATEWAYSUBNET_CIDR>"
+      vpn = {
+        name                      = "vpngw-hub-$${starter_location_01_short}"
+        sku                       = "VpnGw1AZ"
+        vpn_active_active_enabled = false
+        vpn_bgp_enabled           = false
+      }
+    }
+  }
+
+  hub_secondary = {
+    location = "$${starter_location_02}"
+
+    enabled_resources = {
+      firewall                              = false
+      firewall_policy                       = false
+      bastion                               = false
+      virtual_network_gateway_express_route = false
+      virtual_network_gateway_vpn           = true
+      private_dns_zones                     = false
+      private_dns_resolver                  = false
+    }
+
+    hub_virtual_network = {
+      name                 = "vnet-hub-$${starter_location_02_short}"
+      address_space        = ["<WESTUS2_HUB_CIDR>"]
+      mesh_peering_enabled = true
+    }
+
+    virtual_network_gateways = {
+      subnet_address_prefix = "<WESTUS2_GATEWAYSUBNET_CIDR>"
+      vpn = {
+        name                      = "vpngw-hub-$${starter_location_02_short}"
+        sku                       = "VpnGw1AZ"
+        vpn_active_active_enabled = false
+        vpn_bgp_enabled           = false
+      }
+    }
+  }
+}
 
 enable_telemetry = true
 telemetry_additional_content = {
